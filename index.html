@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neo Flip Clock</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/glass.css">
+</head>
+<body>
+  <audio id="flipSound" src="assets/flip-sound.mp3" preload="auto"></audio>
+
+  <div class="clock-container">
+    <div class="clock">
+      <div class="clock__number" id="hours" data-time="00">00</div>
+      <div class="clock__number" id="minutes" data-time="00">00</div>
+      <div class="ampm" id="ampm">AM</div>
+    </div>
+  </div>
+
+  <div class="control-panel glass-panel" id="controlPanel">
+    <button id="resizeToggle" class="icon-btn" aria-label="Resize clock" title="Resize (R)">
+      <object data="assets/icons/resize.svg" type="image/svg+xml"></object>
+    </button>
+    <button id="soundToggle" class="icon-btn" aria-label="Toggle sound" title="Sound (S)">
+      <object data="assets/icons/sound.svg" type="image/svg+xml"></object>
+    </button>
+    <button id="timezoneToggle" class="icon-btn" aria-label="Switch timezone" title="Timezone (T)">
+      <object data="assets/icons/globe.svg" type="image/svg+xml"></object>
+    </button>
+    <button id="themeToggle" class="icon-btn" aria-label="Toggle theme" title="Theme (D)">
+      <object data="assets/icons/sun.svg" type="image/svg+xml"></object>
+    </button>
+  </div>
+
+  <script src="scripts/draggable.js"></script>
+  <script src="scripts/main.js"></script>
+</body>
+</html>

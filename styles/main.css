@@ -1,0 +1,139 @@
+:root {
+  --bg: #0a0a0a;
+  --number: #1a1a1a;
+  --number-shade: #2a2a2a;
+  --text-color: rgba(255,255,255,0.9);
+  --line-color: #0a0a0a;
+  --accent: rgba(100,200,255,0.7);
+  --clock-scale: 1;
+  --size-scale: 1;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--bg);
+  color: var(--text-color);
+  overflow: hidden;
+}
+
+.clock-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  transition: transform 0.3s ease;
+}
+
+.clock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(var(--size-scale));
+  transform-origin: center;
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+
+.clock__number {
+  position: relative;
+  min-width: 15vmin;
+  margin: 0 2vmin;
+  background-color: var(--number);
+  background-image: linear-gradient(var(--number-shade), var(--number));
+  border-radius: 1.5vmin;
+  font-size: 40vmin;
+  font-weight: 700;
+  text-align: center;
+  color: var(--text-color);
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  padding: 1.5vmin;
+  padding-bottom: 4vmin;
+  box-shadow: 0 2vmin 4vmin rgba(0,0,0,0.3);
+}
+
+.clock__number::before {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  content: attr(data-time);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  opacity: 0;
+  overflow: hidden;
+  transform-origin: top;
+}
+
+.clock__number::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  border-bottom: 0.3vmin solid var(--line-color);
+  display: block;
+}
+
+.flip::before {
+  animation: flip ease-in-out 600ms -100ms;
+}
+
+@keyframes flip {
+  0% {
+    opacity: 0;
+    background-color: var(--number);
+    color: var(--number);
+    transform: rotateX(180deg);
+  }
+  15% {
+    opacity: 1;
+  }
+  90% {
+    background-color: transparent;
+    color: inherit;
+    transform: rotateX(0);
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.ampm {
+  font-size: 5vmin;
+  margin-left: 2vmin;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+body.light-mode {
+  --bg: #f5f5f7;
+  --number: #ffffff;
+  --number-shade: #e5e5ea;
+  --text-color: rgba(0,0,0,0.9);
+  --line-color: #ffffff;
+  --accent: rgba(0, 100, 255, 0.7);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .clock {
+    flex-direction: column;
+  }
+  .ampm {
+    margin: 2vmin 0 0 0;
+  }
+}
