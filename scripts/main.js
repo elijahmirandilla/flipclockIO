@@ -16,6 +16,7 @@ const clockContainer = document.querySelector(".clock");
 const timezoneContainer = document.querySelector(".timezone-container");
 const timezoneList = document.getElementById("timezoneList");
 const timezoneSearch = document.getElementById("timezoneSearch");
+const fullscreenToggle = document.getElementById("fullscreenToggle");
 
 // State
 let dropdownOpen = false;
@@ -24,6 +25,7 @@ let darkMode = true;
 let sizeState = 0; // 0=default, 1=medium, 2=large
 let currentTimezone = 'local';
 let timezones = [];
+let isFullscreen = false;
 
 // Timezone data
 const timezoneData = [
@@ -100,9 +102,11 @@ function setupEventListeners() {
     if (e.code === 'KeyT') toggleTimezoneDropdown();
     if (e.code === 'KeyD') toggleTheme(true);
     if (e.code === 'KeyR') toggleSize();
+    if (e.code === 'KeyF') toggleFullscreen(); // New fullscreen shortcut
     if (e.code === 'Escape') timezoneContainer.classList.remove('active');
   });
   
+  fullscreenToggle.addEventListener('click', toggleFullscreen);
   // Timezone search
   timezoneSearch.addEventListener('input', filterTimezones);
   timezoneSearch.addEventListener('click', (e) => e.stopPropagation());
@@ -312,6 +316,32 @@ function toggleSize() {
   }
 }
 
+// Add this new function for fullscreen toggle
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch(err => {
+      console.error(`Error attempting to enable fullscreen: ${err.message}`);
+    });
+    isFullscreen = true;
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+      isFullscreen = false;
+    }
+  }
+  
+  fullscreenToggle.classList.toggle('active');
+  if (soundEnabled) {
+    zoomSound.currentTime = 0;
+    zoomSound.play().catch(console.error);
+  }
+}
+
+// Add this event listener to handle fullscreen change
+document.addEventListener('fullscreenchange', () => {
+  isFullscreen = !!document.fullscreenElement;
+  fullscreenToggle.classList.toggle('active', isFullscreen);
+});
 
 
 // Start the clock
