@@ -87,3 +87,12 @@
 .icon-btn:hover object {
   transform: scale(1.15);
 }
+
+.icon-btn.fullscreen-active {
+  background: var(--accent);
+  box-shadow: 0 0 20px var(--accent);
+}
+
+.icon-btn.fullscreen-active::before {
+  background: radial-gradient(circle at center, rgba(255,255,255,0.6) 0%, transparent 70%);
+}
