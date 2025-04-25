@@ -17,6 +17,9 @@ const timezoneContainer = document.querySelector(".timezone-container");
 const timezoneList = document.getElementById("timezoneList");
 const timezoneSearch = document.getElementById("timezoneSearch");
 const fullscreenToggle = document.getElementById("fullscreenToggle");
+const shootingStarContainer = document.createElement('div');
+shootingStarContainer.className = 'shooting-star-container';
+document.body.appendChild(shootingStarContainer);
 
 // State
 let dropdownOpen = false;
@@ -268,6 +271,108 @@ function toggleSound() {
   }
 }
 
+
+// Meteor cluster system
+function createMeteorShower() {
+  if (document.body.classList.contains('light-mode')) return;
+
+  // Determine meteor color type
+  let colorType = 'blue'; // default
+  if (Math.random() > 0.7) {
+    const colors = ['green', 'orange', 'purple'];
+    colorType = colors[Math.floor(Math.random() * colors.length)];
+  }
+  if (Math.random() > 0.9) colorType = 'fireball';
+
+  // Trigger copyright glow 5 seconds before
+  const copyright = document.querySelector('.copyright');
+  copyright.classList.add(`glow-${colorType}`);
+  setTimeout(() => {
+    copyright.classList.remove(`glow-${colorType}`);
+  }, 5000);
+
+  // Create meteors after 5 seconds
+  setTimeout(() => {
+    const meteorCount = Math.floor(1 + Math.random() * 3);
+    const showerDuration = 2000;
+
+    for (let i = 0; i < meteorCount; i++) {
+      setTimeout(() => {
+        const star = document.createElement('div');
+        star.className = 'shooting-star';
+
+        // Random properties
+        const startY = 20 + Math.random() * (window.innerHeight * 0.5);
+        const angle = -15 + (Math.random() * -15);
+        const length = 100 + Math.random() * 100;
+        const fallDistance = 100 + Math.random() * 200;
+        const driftX = (Math.random() - 0.5) * 80;
+        const duration = 0.7 + Math.random() * 1;
+        const delay = Math.random() * 1000;
+
+        // Set properties
+        star.style.setProperty('--start-y', `${startY}px`);
+        star.style.setProperty('--angle', `${angle}deg`);
+        star.style.setProperty('--length', `${length}px`);
+        star.style.setProperty('--fall-distance', `${fallDistance}px`);
+        star.style.setProperty('--drift-x', `${driftX}px`);
+        star.style.animation = `meteor ${duration}s ${delay}ms linear forwards`;
+
+        // Apply color
+        switch(colorType) {
+          case 'green':
+            star.style.background = `linear-gradient(90deg, 
+              rgba(100,255,100,1) 0%, 
+              rgba(100,220,150,0.8) 50%, 
+              rgba(100,180,100,0) 100%)`;
+            break;
+          case 'orange':
+            star.style.background = `linear-gradient(90deg, 
+              rgba(255,180,100,1) 0%, 
+              rgba(255,150,120,0.8) 50%, 
+              rgba(255,120,100,0) 100%)`;
+            break;
+          case 'purple':
+            star.style.background = `linear-gradient(90deg, 
+              rgba(200,150,255,1) 0%, 
+              rgba(180,160,255,0.8) 50%, 
+              rgba(150,120,255,0) 100%)`;
+            break;
+          case 'fireball':
+            star.style.height = '2px';
+            star.style.filter = 'drop-shadow(0 0 8px rgba(255, 220, 150, 0.8))';
+            star.style.background = `linear-gradient(90deg, 
+              rgba(255,255,200,1) 0%, 
+              rgba(255,220,150,0.9) 50%, 
+              rgba(255,180,100,0) 100%)`;
+            break;
+          default: // blue
+            star.style.background = `linear-gradient(90deg, 
+              rgba(255,255,255,1) 0%, 
+              rgba(150,220,255,0.8) 50%, 
+              rgba(100,180,255,0) 100%)`;
+        }
+
+        shootingStarContainer.appendChild(star);
+        setTimeout(() => star.remove(), duration * 1000 + delay);
+      }, Math.random() * showerDuration);
+    }
+  }, 5000);
+}
+
+// Schedule meteor showers (now 10-20s for testing with 5s warning)
+function scheduleMeteorShowers() {
+  if (document.body.classList.contains('light-mode')) return;
+  
+  createMeteorShower();
+  setTimeout(scheduleMeteorShowers, 30000 + Math.random() * 240000);
+}
+
+// Initialize
+if (!document.body.classList.contains('light-mode')) {
+  setTimeout(scheduleMeteorShowers, 5000); // Start first shower after 5s
+}
+
 function toggleTheme(playSound) {
   darkMode = !darkMode;
   document.body.classList.toggle("light-mode");
@@ -278,6 +383,14 @@ function toggleTheme(playSound) {
   const icon = themeToggle.querySelector('object');
   icon.data = `assets/icons/${darkMode ? 'sun' : 'moon'}.svg`;
   
+  // Start or stop shooting stars based on theme
+  if (darkMode) {
+    shootingStarContainer.innerHTML = ''; // Clear any existing stars
+    scheduleShootingStar();
+  } else {
+    shootingStarContainer.innerHTML = '';
+  }
+    
   if (playSound && soundEnabled) {
     if (darkMode) {
     darkSound.currentTime = 0;
@@ -316,7 +429,7 @@ function toggleSize() {
   }
 }
 
-// Add this new function for fullscreen toggle
+// New function for fullscreen toggle
 function toggleFullscreen() {
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen().catch(err => {
@@ -337,7 +450,7 @@ function toggleFullscreen() {
   }
 }
 
-// Add this event listener to handle fullscreen change
+// Handle fullscreen change
 document.addEventListener('fullscreenchange', () => {
   isFullscreen = !!document.fullscreenElement;
   fullscreenToggle.classList.toggle('active', isFullscreen);
