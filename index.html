@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Flip Clock</title>
   <link rel="icon" type="image/x-icon" href="./favicon.ico" sizes="16x16">
   <link rel="stylesheet" href="styles/main.css">
@@ -10,18 +10,76 @@
   <link rel="stylesheet" href="styles/shootingstar.css">
 </head>
 <body>
+  <!-- Audio Elements -->
   <audio id="flipSound" src="assets/flip-sound.mp3" preload="auto"></audio>
   <audio id="darkSound" src="assets/dark.mp3" preload="auto"></audio>
   <audio id="lightSound" src="assets/light.mp3" preload="auto"></audio>
   <audio id="soundSound" src="assets/sound.mp3" preload="auto"></audio>
   <audio id="timezoneSound" src="assets/timezone.mp3" preload="auto"></audio>
   <audio id="zoomSound" src="assets/zoom.mp3" preload="auto"></audio>
+  <audio id="timerAlarmSound" src="assets/timer-alarm.mp3" preload="auto"></audio>
 
   <div class="clock-container">
     <div class="clock">
-      <div class="clock__number" id="hours" data-time="00">00</div>
-      <div class="clock__number" id="minutes" data-time="00">00</div>
-      <div class="ampm" id="ampm">AM</div>
+      <!-- Clock Mode -->
+      <div class="clock-mode clock-active">
+        <div class="clock__number" id="hours" data-time="00">00</div>
+        <div class="clock__colon">:</div>
+        <div class="clock__number" id="minutes" data-time="00">00</div>
+        <div class="ampm" id="ampm">AM</div>
+      </div>
+      
+      <!-- Stopwatch Mode -->
+      <div class="stopwatch-mode">
+        <div class="clock__number" id="sw-hours" data-time="00">00</div>
+        <div class="clock__colon">:</div>
+        <div class="clock__number" id="sw-minutes" data-time="00">00</div>
+        <div class="clock__colon">:</div>
+        <div class="clock__number" id="sw-seconds" data-time="00">00</div>
+        <div class="clock__colon">.</div>
+        <div class="clock__number small" id="sw-centiseconds" data-time="00">00</div>
+        <div class="stopwatch-controls">
+          <button id="sw-start" class="control-btn primary">Start</button>
+          <button id="sw-lap" class="control-btn" disabled>Lap</button>
+          <button id="sw-reset" class="control-btn" disabled>Reset</button>
+        </div>
+        <div class="laps-container glass-panel">
+          <div class="laps-header">
+            <span>Laps</span>
+          </div>
+          <div class="laps-list" id="lapsList"></div>
+        </div>
+      </div>
+      
+      <!-- Timer Mode -->
+      <div class="timer-mode">
+        <div class="clock__number" id="tm-hours" data-time="00">00</div>
+        <div class="clock__colon">:</div>
+        <div class="clock__number" id="tm-minutes" data-time="00">00</div>
+        <div class="clock__colon">:</div>
+        <div class="clock__number" id="tm-seconds" data-time="00">00</div>
+        <div class="timer-controls">
+          <button id="tm-start" class="control-btn primary" disabled>Start</button>
+          <button id="tm-reset" class="control-btn" disabled>Reset</button>
+        </div>
+        <div class="timer-set glass-panel">
+          <div class="timer-inputs">
+            <div class="input-group">
+              <span>Hours</span>
+              <input type="number" id="tm-set-hours" min="0" max="23" value="0" placeholder="00">
+            </div>
+            <div class="input-group">
+              <span>Minutes</span>
+              <input type="number" id="tm-set-minutes" min="0" max="59" value="0" placeholder="00">
+            </div>
+            <div class="input-group">
+              <span>Seconds</span>
+              <input type="number" id="tm-set-seconds" min="0" max="59" value="0" placeholder="00">
+            </div>
+          </div>
+          <button id="tm-set" class="control-btn primary" disabled>Set</button>
+        </div>
+      </div>
     </div>
     <div class="copyright glass-panel">
       <span>© 2025 Elijah. All rights reserved.</span>
@@ -29,6 +87,26 @@
   </div>
 
   <div class="control-panel glass-panel" id="controlPanel">
+    <div class="mode-selector">
+      <button id="modeToggle" class="icon-btn" aria-label="Change mode" title="Change Mode (M)">
+        <!-- Initial icon will be set by JavaScript -->
+        <object data="assets/icons/clock.svg" type="image/svg+xml"></object>
+      </button>
+      <div class="mode-dropdown glass-panel">
+        <div class="mode-item" data-mode="clock">
+          <object data="assets/icons/clock.svg" type="image/svg+xml"></object>
+          <span>Clock</span>
+        </div>
+        <div class="mode-item" data-mode="stopwatch">
+          <object data="assets/icons/stopwatch.svg" type="image/svg+xml"></object>
+          <span>Stopwatch</span>
+        </div>
+        <div class="mode-item" data-mode="timer">
+          <object data="assets/icons/timer.svg" type="image/svg+xml"></object>
+          <span>Timer</span>
+        </div>
+      </div>
+    </div>
     <button id="fullscreenToggle" class="icon-btn" aria-label="Toggle fullscreen" title="Fullscreen (F)">
       <object data="assets/icons/fullscreen.svg" type="image/svg+xml"></object>
     </button>

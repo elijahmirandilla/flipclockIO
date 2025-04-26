@@ -2,7 +2,7 @@
 
 A beautiful flip clock with realistic shooting star effects that appear in the background during dark mode. Features smooth animations, timezone support, and customizable settings.
 
-![Screenshot of Cosmic Flip Clock](https://example.com/screenshot.jpg) *(replace with your screenshot URL)*
+![Screenshot of Cosmic Flip Clock](/flipclockIO.png)
 
 ## Features ✨
 
@@ -27,7 +27,7 @@ A beautiful flip clock with realistic shooting star effects that appear in the b
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/cosmic-flip-clock.git
+   git clone [https://github.com/your-username/cosmic-flip-clock.git](https://github.com/elijahmirandilla/flipclockIO)
    cd cosmic-flip-clock
 
 2. Open in browser:

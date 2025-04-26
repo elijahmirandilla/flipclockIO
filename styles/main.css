@@ -16,6 +16,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
@@ -25,16 +26,19 @@ html, body {
   background-color: var(--bg);
   color: var(--text-color);
   overflow: hidden;
+  touch-action: manipulation;
 }
 
 .clock-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
   width: 100vw;
   transition: transform 0.3s ease;
   position: relative;
+  padding: 20px;
 }
 
 .clock {
@@ -45,16 +49,18 @@ html, body {
   transform-origin: center;
   transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
   position: relative;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .clock__number {
   position: relative;
   min-width: 15vmin;
-  margin: 0 2vmin;
+  margin: 0 1vmin;
   background-color: var(--number);
   background-image: linear-gradient(var(--number-shade), var(--number));
   border-radius: 1.5vmin;
-  font-size: 40vmin;
+  font-size: 20vmin;
   font-weight: 700;
   text-align: center;
   color: var(--text-color);
@@ -67,6 +73,7 @@ html, body {
     inset 0 0 10px rgba(255, 255, 255, 0.05);
   transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
+
 
 .clock__number::before {
   display: flex;
@@ -124,176 +131,9 @@ html, body {
   font-weight: 500;
   opacity: 0.8;
   transition: opacity 0.3s ease;
+  align-self: center;
 }
 
-.copyright {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 8px 20px;
-  font-size: 12px;
-  opacity: 0.7;
-  transition: all 0.3s ease;
-}
-
-.copyright:hover {
-  opacity: 1;
-  transform: translateX(-50%) scale(1.05);
-}
-
-body.light-mode {
-  --bg: #f5f5f7;
-  --number: #ffffff;
-  --number-shade: #e5e5ea;
-  --text-color: rgba(0,0,0,0.9);
-  --line-color: #ffffff;
-  --accent: rgba(0, 100, 255, 0.7);
-  --glass-bg: rgba(255, 255, 255, 0.6);
-  --glass-border: rgba(0, 0, 0, 0.1);
-  --glass-highlight: rgba(0, 0, 0, 0.05);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .clock {
-    flex-direction: column;
-  }
-  .ampm {
-    margin: 2vmin 0 0 0;
-  }
-  .copyright {
-    font-size: 10px;
-    bottom: 10px;
-  }
-}
-
-/* Timezone dropdown styles */
-.timezone-container {
-  position: relative;
-}
-
-.timezone-dropdown {
-  position: absolute;
-  bottom: calc(100% + 15px);
-  right: 0;
-  width: 320px;
-  max-height: 400px;
-  overflow: hidden;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(15px) scale(0.95);
-  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-}
-
-.timezone-container.active .timezone-dropdown {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0) scale(1);
-}
-
-.timezone-search {
-  padding: 15px;
-  border-bottom: 1px solid var(--glass-border);
-  position: relative;
-}
-
-.timezone-search::after {
-  content: '';
-  position: absolute;
-  bottom: 15px;
-  left: 15px;
-  right: 15px;
-  height: 1px;
-  background: var(--glass-highlight);
-  transform-origin: left;
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
-}
-
-.timezone-search:focus-within::after {
-  transform: scaleX(1);
-}
-
-.timezone-search input {
-  width: 100%;
-  padding: 12px 18px;
-  border-radius: 12px;
-  border: none;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--text-color);
-  font-size: 14px;
-  outline: none;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.timezone-search input:focus {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.timezone-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 10px 0;
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent) transparent;
-}
-
-.timezone-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.timezone-list::-webkit-scrollbar-thumb {
-  background-color: var(--accent);
-  border-radius: 3px;
-}
-
-.timezone-item {
-  padding: 14px 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 10px;
-  border-radius: 10px;
-}
-
-.timezone-item:hover {
-  background: var(--glass-highlight);
-  transform: translateX(4px);
-}
-
-.timezone-item.active {
-  color: var(--accent);
-  background: rgba(100, 200, 255, 0.1);
-}
-
-.timezone-item .offset {
-  opacity: 0.7;
-  font-size: 0.85em;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 3px 8px;
-  border-radius: 10px;
-  transition: all 0.2s ease;
-}
-
-.timezone-item:hover .offset {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.timezone-item.active .offset {
-  background: rgba(100, 200, 255, 0.2);
-}
-
-/* Add this to your existing main.css */
 .copyright {
   position: absolute;
   bottom: 20px;
@@ -346,6 +186,18 @@ body.light-mode {
   z-index: 1;
 }
 
+body.light-mode {
+  --bg: #f5f5f7;
+  --number: #ffffff;
+  --number-shade: #e5e5ea;
+  --text-color: rgba(0,0,0,0.9);
+  --line-color: #ffffff;
+  --accent: rgba(0, 100, 255, 0.7);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --glass-highlight: rgba(0, 0, 0, 0.05);
+}
+
 body.light-mode .copyright {
   background: rgba(240, 240, 240, 0.6);
   border: 1px solid rgba(0, 0, 0, 0.05);
@@ -358,10 +210,662 @@ body.light-mode .copyright::before {
   background: linear-gradient(135deg, rgba(0,0,0,0.05) 0%, transparent 100%);
 }
 
+/* Timezone dropdown styles */
+.timezone-container {
+  position: relative;
+}
+
+.timezone-dropdown {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.95);
+  width: 90vw;
+  max-width: 250px;
+  max-height: 60vh;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.timezone-container.active .timezone-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) scale(1);
+}
+
+.timezone-search {
+  padding: 15px;
+  border-bottom: 1px solid var(--glass-border);
+  position: relative;
+}
+
+.timezone-search::after {
+  content: '';
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  right: 15px;
+  height: 1px;
+  background: var(--glass-highlight);
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.timezone-search:focus-within::after {
+  transform: scaleX(1);
+}
+
+.timezone-search input {
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 20px;
+  border: none;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-color);
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.timezone-search input:focus {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.timezone-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.timezone-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.timezone-list::-webkit-scrollbar-thumb {
+  background-color: var(--accent);
+  border-radius: 3px;
+}
+
+.timezone-item {
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 10px;
+  border-radius: 10px;
+  touch-action: manipulation;
+}
+
+.timezone-item:hover {
+  background: var(--glass-highlight);
+  transform: translateX(4px);
+}
+
+.timezone-item.active {
+  color: var(--accent);
+  background: rgba(100, 200, 255, 0.1);
+}
+
+.timezone-item .offset {
+  opacity: 0.7;
+  font-size: 0.85em;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 3px 8px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.timezone-item:hover .offset {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.timezone-item.active .offset {
+  background: rgba(100, 200, 255, 0.2);
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
+  .clock {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .clock__number {
+    font-size: 18vmin;
+    min-width: 12vmin;
+    margin: 0 0.5vmin;
+  }
+  
+  .clock__colon {
+    font-size: 10vmin;
+    margin: 0 0.5vmin;
+  }
+  
+  .ampm {
+    font-size: 4vmin;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+  }
+  
   .copyright {
     font-size: 10px;
     padding: 8px 16px;
     bottom: 10px;
+  }
+  
+  .timezone-dropdown {
+    width: 95vw;
+    max-height: 50vh;
+    bottom: 80px;
+  }
+  
+  .timezone-item {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .clock__number {
+    font-size: 16vmin;
+    min-width: 10vmin;
+    padding: 1vmin;
+    padding-bottom: 3vmin;
+  }
+  
+  .ampm {
+    font-size: 3.5vmin;
+  }
+  
+  .control-panel {
+    padding: 10px;
+    gap: 8px;
+  }
+  
+  .icon-btn {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
+
+/* Add these new styles to your existing main.css */
+
+/* Mode Selector Styles */
+.mode-selector {
+  position: relative;
+}
+
+.mode-dropdown {
+  position: absolute;
+  bottom: calc(100% + 15px);
+  left: 0;
+  width: 160px;
+  padding: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(15px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-radius: var(--glass-radius);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+}
+
+.mode-selector.active .mode-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.mode-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.mode-item:hover {
+  background: var(--glass-highlight);
+}
+
+.mode-item.active {
+  background: rgba(100, 200, 255, 0.1);
+  color: var(--accent);
+}
+
+.mode-item.active object {
+  filter: drop-shadow(0 0 6px var(--accent));
+}
+
+.mode-item object {
+  width: 18px;
+  height: 18px;
+  transition: all 0.2s ease;
+}
+/* Control Buttons */
+.control-btn {
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: none;
+  background: rgba(120, 120, 120, 0.2);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  font-weight: 500;
+  min-width: 80px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+}
+
+.control-btn.primary {
+  background: var(--accent);
+  color: white;
+  border: 1px solid rgba(100, 200, 255, 0.3);
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.03);
+}
+
+.control-btn.primary:hover {
+  background: rgba(100, 200, 255, 0.8);
+}
+
+.control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  background: rgba(120, 120, 120, 0.1);
+}
+
+.control-btn.primary:disabled {
+  background: rgba(100, 200, 255, 0.3);
+}
+
+
+/* Mode-specific styles */
+.clock-mode,
+.stopwatch-mode,
+.timer-mode {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.clock-active {
+  display: flex;
+}
+
+.clock__number.small {
+  font-size: 12vmin;
+  min-width: 8vmin;
+  padding-bottom: 3vmin;
+}
+
+/* Stopwatch Controls */
+.stopwatch-controls,
+.timer-controls {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Laps Container */
+.laps-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 20px auto 0;
+  padding: 12px;
+  border-radius: 20px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.laps-header {
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-color);
+  opacity: 0.8;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 8px;
+}
+
+.laps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lap-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.lap-item:first-child {
+  background: rgba(100, 200, 255, 0.1);
+  color: var(--accent);
+}
+
+.control-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background: rgba(100, 100, 100, 0.3);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  min-width: 80px;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Timer Set Controls */
+.timer-set {
+  width: 100%;
+  max-width: 400px;
+  margin: 20px auto 0;
+  padding: 16px;
+  border-radius: var(--glass-radius);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+}
+
+.timer-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  width: 100%;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.input-group input {
+  width: 80px;
+  padding: 12px;
+  border-radius: var(--glass-radius);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  color: var(--text-color);
+  text-align: center;
+  font-size: 18px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.input-group input::-webkit-outer-spin-button,
+.input-group input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-group input:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(100, 200, 255, 0.3);
+}
+
+.input-group span {
+  font-size: 12px;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input-controls {
+  display: flex;
+  margin-top: 0px;
+}
+
+.input-control {
+  width: 40px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--glass-radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid var(--glass-border);
+}
+
+.input-control.increment {
+  margin-right: auto; /* Push to left */
+}
+
+.input-control.decrement {
+  margin-left: auto; /* Push to right */
+}
+
+.input-control:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mode-dropdown {
+    left: 50%;
+    transform: translateX(-50%) translateY(15px) scale(0.95);
+    bottom: calc(100% + 10px);
+  }
+  
+  .mode-selector.active .mode-dropdown {
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  
+  .control-btn {
+    min-width: 70px;
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+  
+  .timer-inputs {
+    gap: 10px;
+  }
+  
+  .input-group input {
+    width: 70px;
+    font-size: 16px;
+  }
+
+  .input-control {
+    width: 35px;
+    height: 18px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stopwatch-controls,
+  .timer-controls {
+    flex-wrap: wrap;
+  }
+  
+  .control-btn {
+    min-width: 60px;
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+  
+  .timer-set {
+    padding: 12px;
+  }
+  
+  .input-group input {
+    width: 60px;
+    font-size: 15px;
+    padding: 10px;
+  }
+  
+  .laps-container {
+    max-height: 150px;
+  }
+  
+  .input-controls {
+    right: 5px;
+  }
+  
+  .input-control {
+    width: 30px;
+    height: 18px;
+    font-size: 12px;
+  }
+}
+
+/* Add these new styles to your CSS */
+
+/* Icon transition effects */
+.icon-btn object {
+  transition: all 0.4s cubic-bezier(0.28, 0.62, 0.35, 1);
+  transform-origin: center;
+}
+
+/* Mode switch animation */
+.icon-btn[data-changing] object {
+  animation: iconPulse 0.6s ease-out;
+}
+
+@keyframes iconPulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Replace the existing theme animation with this */
+
+.theme-change object {
+  position: relative;
+  animation: themeRoll 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+@keyframes themeRoll {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  49% {
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(20px) rotate(-90deg);
+    opacity: 0;
+  }
+  51% {
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Add sun/moon styling */
+#themeToggle object {
+  transition: none; /* Disable default transition for this */
+}
+
+/* Add container for proper animation */
+.icon-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-change object {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* New sun/moon icons positioning */
+.theme-change object:last-child {
+  animation: newIconRise 0.8s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+}
+
+@keyframes newIconRise {
+  0% {
+    transform: translate(-50%, 20px) rotate(90deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  51% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, 0) rotate(0deg);
+    opacity: 1;
   }
 }
