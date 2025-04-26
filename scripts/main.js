@@ -442,6 +442,7 @@ function resetStopwatch() {
 
 // Timer functions
 function setupTimer() {
+  document.querySelector('.timer-set').classList.remove('hidden');
   tmStartBtn.addEventListener('click', toggleTimer);
   tmResetBtn.addEventListener('click', resetTimer);
   tmSetBtn.addEventListener('click', setTimer);
@@ -487,18 +488,23 @@ function toggleTimer() {
   }
 }
 
+// Update the startTimer function
 function startTimer() {
   if (timerDuration <= 0) return;
   
   timerEndTime = Date.now() + timerDuration;
   timerInterval = setInterval(updateTimer, 100);
   tmResetBtn.disabled = false;
+  
+  // Hide input controls with transition
+  document.querySelector('.timer-set').classList.add('hidden');
 }
 
 function stopTimer() {
   clearInterval(timerInterval);
   timerInterval = null;
   timerDuration = timerEndTime - Date.now();
+  
 }
 
 function updateTimer() {
@@ -518,6 +524,7 @@ function updateTimer() {
   updateNumber(tmHoursEl, String(hours).padStart(2, "0"));
 }
 
+
 function timerFinished() {
   stopTimer();
   timerDuration = 0;
@@ -527,6 +534,7 @@ function timerFinished() {
   tmStartBtn.textContent = 'Start';
   tmStartBtn.disabled = true;
   tmResetBtn.disabled = true; // Keep reset enabled for sound control
+  document.querySelector('.timer-set').classList.remove('hidden');
 
   if (soundEnabled) {
     playAlarmSound();
@@ -567,7 +575,6 @@ document.addEventListener('click', () => {
   }
 });
 
-// Update resetTimer function
 function resetTimer() {
   stopTimer();
   timerDuration = 0;
@@ -576,15 +583,18 @@ function resetTimer() {
   updateNumber(tmHoursEl, "00");
   tmStartBtn.textContent = 'Start';
   tmStartBtn.disabled = true;
-  tmResetBtn.disabled = false;
+  tmResetBtn.disabled = true;
   
-  stopAlarmSound();
+  // Show input controls with transition
+  document.querySelector('.timer-set').classList.remove('hidden');
   
   // Reset input fields but don't clear them
   tmSetHours.value = "00";
   tmSetMinutes.value = "00";
   tmSetSeconds.value = "00";
   tmSetBtn.disabled = true;
+  
+  stopAlarmSound();
 }
 
 // Update setTimer function

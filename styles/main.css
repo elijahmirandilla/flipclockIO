@@ -869,3 +869,23 @@ body.light-mode .copyright::before {
     opacity: 1;
   }
 }
+
+.timer-set {
+  transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+  max-height: 200px;
+  overflow: hidden;
+}
+
+.timer-set.hidden {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  transform: translateY(-10px);
+}
+
+.timer-controls {
+  transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
