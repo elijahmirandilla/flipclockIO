@@ -811,7 +811,7 @@ function scheduleMeteorShowers() {
 
 // Initialize
 if (!document.body.classList.contains('light-mode')) {
-  setTimeout(scheduleMeteorShowers, 10000); // Start first shower after 5s
+  setTimeout(scheduleMeteorShowers, 20000 + Math.random() * 100000); // Random between 20s-120s (2min)
 }
 
 function toggleTheme(playSound) {
