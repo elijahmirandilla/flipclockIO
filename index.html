@@ -9,8 +9,26 @@
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/glass.css">
     <link rel="stylesheet" href="styles/shootingstar.css">
+    <link rel="stylesheet" href="styles/background_dark_parallax.css">
+    <link rel="stylesheet" href="styles/background_dark.css" media="(prefers-color-scheme: dark)">
+    <link rel="stylesheet" href="styles/background_light.css" media="(prefers-color-scheme: light)">
   </head>
   <body>
+    <div class="space-background">
+      <section>
+        <img src="assets/icons/bg.jpg" id="bg">
+        <img src="assets/icons/moon.png" id="moon">
+        <img src="assets/icons/mountain.png" id="mountain">
+        <img src="assets/icons/road.png" id="road">
+      </section>
+      <div class="bg2"></div>
+      <div class="star-field">
+        <div class="layer"></div>
+        <div class="layer"></div>
+        <div class="layer"></div>
+      </div>
+    </div>
+
     <!-- Audio Elements -->
     <audio id="flipSound" src="assets/flip-sound.mp3" preload="auto"></audio>
     <audio id="darkSound" src="assets/dark.mp3" preload="auto"></audio>
@@ -21,7 +39,7 @@
     <audio id="timerAlarmSound" src="assets/timer-alarm.mp3"
       preload="auto"></audio>
 
-    <div class="clock-container">
+    <div class="clock-container" id="clock-effect">
       <div class="clock">
         <!-- Clock Mode -->
         <div class="clock-mode clock-active">
@@ -61,7 +79,7 @@
           <div class="clock__number" id="tm-minutes" data-time="00">00</div>
           <div class="clock__colon">:</div>
           <div class="clock__number" id="tm-seconds" data-time="00">00</div>
-          <div class="timer-controls">
+          <div class="timer-controls" id="timer-buttons">
             <button id="tm-start" class="control-btn primary"
               disabled>Start</button>
             <button id="tm-reset" class="control-btn" disabled>Reset</button>
@@ -89,9 +107,9 @@
           </div>
         </div>
       </div>
-      <div class="copyright glass-panel">
-        <span>© 2025 Elijah. All rights reserved.</span>
-      </div>
+    </div>
+    <div class="copyright glass-panel">
+      <span>© 2025 Elijah. All rights reserved.</span>
     </div>
 
     <div class="control-panel glass-panel" id="controlPanel">
@@ -151,6 +169,25 @@
       </button>
     </div>
 
+    <script type="text/javascript">
+      let bg = document.getElementById("bg");
+      let moon = document.getElementById("moon");
+      let mountain = document.getElementById("mountain");
+      let road = document.getElementById("road");
+      let clock = document.getElementById("clock-effect");
+
+      window.addEventListener('scroll', function(){
+        var value = window.scrollY;
+
+        bg.style.top = value * 0.5 + 'px';
+        moon.style.left = -value * 0.5 + 'px';
+        mountain.style.top = -value * 0.15 + 'px';
+        road.style.top = value * 0.15 + 'px';
+        clock.style.top = value * 1 + 'px';
+      })
+    </script>
+
+    <script src="scripts/starfield.js"></script>
     <script src="scripts/draggable.js"></script>
     <script src="scripts/main.js"></script>
   </body>

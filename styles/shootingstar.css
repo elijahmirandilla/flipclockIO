@@ -1,4 +1,4 @@
-/* Realistic meteor container */
+/* Shooting star container - behind clock */
 .shooting-star-container {
   position: fixed;
   top: 0;
@@ -10,36 +10,27 @@
   overflow: hidden;
 }
 
-/* Meteor element with realistic properties */
-.meteor {
+/* Shooting star element */
+.shooting-star {
   position: absolute;
-  height: 1px;
-  transform-origin: left center;
-  opacity: 0;
-  will-change: transform, opacity;
-  filter: drop-shadow(0 0 4px var(--meteor-core-color));
-}
-
-.meteor::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  width: var(--tail-length);
   height: 1px;
   background: linear-gradient(
     90deg,
-    var(--meteor-core-color) 0%,
-    var(--meteor-mid-color) 40%,
-    var(--meteor-tail-color) 100%
+    rgba(255,255,255,1) 0%,
+    rgba(150,220,255,0.8) 50%,
+    rgba(100,180,255,0) 100%
   );
-  transform: translateY(-50%);
+  transform-origin: left center;
+  opacity: 0;
+  filter: drop-shadow(0 0 3px rgba(100, 200, 255, 0.5));
+  will-change: transform, opacity;
 }
 
-/* Realistic meteor animation */
-@keyframes meteor-fall {
+/* Meteor animation */
+@keyframes meteor {
   0% {
     transform: 
-      translateX(calc(100vw + 100px)) 
+      translateX(calc(100vw + 50px)) 
       translateY(var(--start-y))
       rotate(var(--angle));
     opacity: 0;
@@ -47,10 +38,10 @@
   }
   2% {
     opacity: 1;
-    width: var(--head-size);
+    width: var(--length);
   }
   80% {
-    opacity: 0.9;
+    opacity: 0.8;
   }
   100% {
     transform:
@@ -58,22 +49,49 @@
       translateY(calc(var(--start-y) + var(--fall-distance)))
       rotate(var(--angle));
     opacity: 0;
-    width: 0;
+    width: 10px;
   }
 }
 
-/* Copyright glow effects matching meteor colors */
-.copyright.glow-meteor {
-  animation: copyright-glow 5s ease-out;
+/* Copyright glow effects */
+.copyright.glow-blue {
+  animation: copyright-glow-blue 5s ease-out;
+}
+.copyright.glow-green {
+  animation: copyright-glow-green 5s ease-out;
+}
+.copyright.glow-orange {
+  animation: copyright-glow-orange 5s ease-out;
+}
+.copyright.glow-fireball {
+  animation: copyright-glow-fireball 5s ease-out;
 }
 
-@keyframes copyright-glow {
-  0%, 100% { 
-    color: inherit; 
-    text-shadow: none; 
-  }
+@keyframes copyright-glow-blue {
+  0%, 100% { color: inherit; text-shadow: none; }
   50% { 
-    color: var(--glow-color);
-    text-shadow: 0 0 10px var(--glow-shadow);
+    color: rgba(150, 220, 255, 0.9);
+    text-shadow: 0 0 8px rgba(100, 200, 255, 0.7);
+  }
+}
+@keyframes copyright-glow-green {
+  0%, 100% { color: inherit; text-shadow: none; }
+  50% { 
+    color: rgba(100, 255, 100, 0.9);
+    text-shadow: 0 0 8px rgba(100, 255, 100, 0.5);
+  }
+}
+@keyframes copyright-glow-orange {
+  0%, 100% { color: inherit; text-shadow: none; }
+  50% { 
+    color: rgba(255, 180, 100, 0.9);
+    text-shadow: 0 0 8px rgba(255, 150, 100, 0.5);
+  }
+}
+@keyframes copyright-glow-fireball {
+  0%, 100% { color: inherit; text-shadow: none; }
+  50% { 
+    color: rgba(255, 220, 150, 0.9);
+    text-shadow: 0 0 12px rgba(255, 200, 100, 0.7);
   }
 }

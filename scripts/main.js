@@ -47,6 +47,8 @@ const tmSetSeconds = document.getElementById("tm-set-seconds");
 const tmSetBtn = document.getElementById("tm-set");
 
 // State
+let scrollLocked = false;
+let scrollPosition = 0;
 let dropdownOpen = false;
 let soundEnabled = false;
 let darkMode = true;
@@ -190,9 +192,15 @@ function toggleModeDropdown() {
   }
 }
 
+// Update your switchMode function
 function switchMode(mode) {
   if (currentMode === mode) return;
   
+  // Release scroll lock if switching to clock mode
+  if (mode === 'clock') {
+    releaseScrollLock();
+  }
+
   // Add changing state
   modeToggle.setAttribute('data-changing', 'true');
 
@@ -233,11 +241,81 @@ function switchMode(mode) {
       lapsList.innerHTML = '';
     }
     
+    // Apply scroll lock if in dark mode and not clock mode
+    if (darkMode && mode !== 'clock') {
+      scrollToBottom().then(() => {
+        applyScrollLock();
+      });
+    }
+
     if (soundEnabled) {
       soundSound.currentTime = 0;
       soundSound.play().catch(console.error);
     }
   }, 300);
+}
+
+// Add these new helper functions
+function scrollToBottom() {
+  return new Promise(resolve => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth'
+    });
+    
+    // Small delay to ensure scroll completes before locking
+    setTimeout(resolve, 500);
+  });
+}
+
+function applyScrollLock() {
+  if (scrollLocked || !darkMode || currentMode === 'clock') return;
+  
+  scrollLocked = true;
+  
+  // Add class to hide scrollbar and prevent scrolling
+  document.documentElement.classList.add('lock-scrolling');
+  
+  // Force scroll position to bottom
+  window.scrollTo({
+    top: document.body.scrollHeight,
+    behavior: 'auto'
+  });
+  
+  // Add touch listener for mobile devices
+  document.addEventListener('touchmove', preventTouchScroll, { passive: false });
+}
+
+function releaseScrollLock() {
+  if (!scrollLocked) return;
+  
+  scrollLocked = false;
+  
+  // Remove scroll lock styles
+  document.documentElement.classList.remove('lock-scrolling');
+  
+  // Remove event listeners
+  document.removeEventListener('touchmove', preventTouchScroll);
+}
+
+function preventTouchScroll(e) {
+  if (scrollLocked) {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  }
+}
+
+function preventKeyScroll(e) {
+  if (!scrollLocked) return;
+  
+  // Prevent arrow keys, page up/down, home/end
+  const keys = [33, 34, 35, 36, 37, 38, 39, 40];
+  if (keys.includes(e.keyCode)) {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  }
 }
 
 // Clock functions
@@ -635,6 +713,107 @@ function toggleSound() {
   }
 }
 
+// Meteor cluster system
+function createMeteorShower() {
+  if (document.body.classList.contains('light-mode')) return;
+
+  // Determine meteor color type
+  let colorType = 'blue'; // default
+  if (Math.random() > 0.7) {
+    const colors = ['green', 'orange', 'purple'];
+    colorType = colors[Math.floor(Math.random() * colors.length)];
+  }
+  if (Math.random() > 0.9) colorType = 'fireball';
+
+  // Trigger copyright glow 5 seconds before
+  const copyright = document.querySelector('.copyright');
+  copyright.classList.add(`glow-${colorType}`);
+  setTimeout(() => {
+    copyright.classList.remove(`glow-${colorType}`);
+  }, 5000);
+
+  // Create meteors after 5 seconds
+  setTimeout(() => {
+    const meteorCount = Math.floor(1 + Math.random() * 3);
+    const showerDuration = 2000;
+
+    for (let i = 0; i < meteorCount; i++) {
+      setTimeout(() => {
+        const star = document.createElement('div');
+        star.className = 'shooting-star';
+
+        // Random properties
+        const startY = 20 + Math.random() * (window.innerHeight * 0.5);
+        const angle = -15 + (Math.random() * -15);
+        const length = 100 + Math.random() * 100;
+        const fallDistance = 100 + Math.random() * 200;
+        const driftX = (Math.random() - 0.5) * 80;
+        const duration = 0.7 + Math.random() * 1;
+        const delay = Math.random() * 1000;
+
+        // Set properties
+        star.style.setProperty('--start-y', `${startY}px`);
+        star.style.setProperty('--angle', `${angle}deg`);
+        star.style.setProperty('--length', `${length}px`);
+        star.style.setProperty('--fall-distance', `${fallDistance}px`);
+        star.style.setProperty('--drift-x', `${driftX}px`);
+        star.style.animation = `meteor ${duration}s ${delay}ms linear forwards`;
+
+        // Apply color
+        switch(colorType) {
+          case 'green':
+            star.style.background = `linear-gradient(90deg, 
+              rgba(100,255,100,1) 0%, 
+              rgba(100,220,150,0.8) 50%, 
+              rgba(100,180,100,0) 100%)`;
+            break;
+          case 'orange':
+            star.style.background = `linear-gradient(90deg, 
+              rgba(255,180,100,1) 0%, 
+              rgba(255,150,120,0.8) 50%, 
+              rgba(255,120,100,0) 100%)`;
+            break;
+          case 'purple':
+            star.style.background = `linear-gradient(90deg, 
+              rgba(200,150,255,1) 0%, 
+              rgba(180,160,255,0.8) 50%, 
+              rgba(150,120,255,0) 100%)`;
+            break;
+          case 'fireball':
+            star.style.height = '2px';
+            star.style.filter = 'drop-shadow(0 0 8px rgba(255, 220, 150, 0.8))';
+            star.style.background = `linear-gradient(90deg, 
+              rgba(255,255,200,1) 0%, 
+              rgba(255,220,150,0.9) 50%, 
+              rgba(255,180,100,0) 100%)`;
+            break;
+          default: // blue
+            star.style.background = `linear-gradient(90deg, 
+              rgba(255,255,255,1) 0%, 
+              rgba(150,220,255,0.8) 50%, 
+              rgba(100,180,255,0) 100%)`;
+        }
+
+        shootingStarContainer.appendChild(star);
+        setTimeout(() => star.remove(), duration * 1000 + delay);
+      }, Math.random() * showerDuration);
+    }
+  }, 5000);
+}
+
+// Schedule meteor showers (now 10-20s for testing with 5s warning)
+function scheduleMeteorShowers() {
+  if (document.body.classList.contains('light-mode')) return;
+  
+  createMeteorShower();
+  setTimeout(scheduleMeteorShowers, 5000);
+}
+
+// Initialize
+if (!document.body.classList.contains('light-mode')) {
+  setTimeout(scheduleMeteorShowers, 10000); // Start first shower after 5s
+}
+
 function toggleTheme(playSound) {
   const icon = themeToggle.querySelector('object');
   const newIcon = document.createElement('object');
@@ -659,6 +838,19 @@ function toggleTheme(playSound) {
   themeToggle.classList.toggle('active');
   localStorage.setItem('darkMode', darkMode);
   
+  // Toggle background stylesheets
+  document.getElementById('dark-bg').disabled = darkMode;
+  document.getElementById('light-bg').disabled = !darkMode;
+
+  // Handle scroll lock when changing theme
+  if (!darkMode) {
+    releaseScrollLock();
+  } else if (currentMode !== 'clock') {
+    scrollToBottom().then(() => {
+      applyScrollLock();
+    });
+  }
+
   if (darkMode) {
     shootingStarContainer.innerHTML = '';
     scheduleShootingStar();
