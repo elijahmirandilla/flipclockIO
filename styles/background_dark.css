@@ -23,7 +23,7 @@ html {
 }
 
 .bg2 {
-  background: url(https://wallpapers.com/images/featured/dark-galaxy-wturp0ytecb3kpqq.jpg) no-repeat center center;
+  background: url('assets/icons/dark-galaxy.jpg') center center;
   background-size: cover; /* fills the area without white spots */
   background-attachment: fixed; /* optional: makes background scroll smoother */
   background-position: center center;
