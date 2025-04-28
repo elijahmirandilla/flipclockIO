@@ -23,11 +23,6 @@ html {
 }
 
 .bg2 {
-  background: url('assets/icons/dark-galaxy.jpg') center center;
-  background-size: cover; /* fills the area without white spots */
-  background-attachment: fixed; /* optional: makes background scroll smoother */
-  background-position: center center;
-  background-repeat: no-repeat;
   height: 100%; /* full screen height */
   width: 100%;
   position: relative;
@@ -40,6 +35,15 @@ html {
   image-rendering: -webkit-optimize-contrast; /* helps preserve quality (WebKit) */
   image-rendering: crisp-edges; /* general quality setting */
 }
+
+.bg2 img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* preserves aspect ratio and scales image */
+  object-position: center center; /* centers the image */
+  pointer-events: none; /* optional: prevents interactions with the image */
+}
+
 
 .bg2::before {
   content: "";
@@ -215,4 +219,3 @@ section img
 {
   z-index: 8;
 }
-
